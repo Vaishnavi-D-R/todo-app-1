@@ -42,7 +42,7 @@ pipeline{
        stage('sonar analysis'){
             agent any
             steps{
-                withSonarQubeEnv('sonar-server'){
+                withSonarQubeEnv('sonarQube'){
                     echo 'Performing SonarQube Analysis'
                     sh 'mvn -f app/pom.xml package sonar:sonar'
                 }
