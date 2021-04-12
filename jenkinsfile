@@ -39,7 +39,7 @@ pipeline{
             }
         }
        
-       stage('sonar analysis'){
+   /*    stage('sonar analysis'){
             agent any
             steps{
                 withSonarQubeEnv('sonar-server'){
@@ -120,7 +120,7 @@ pipeline{
             }
         }
 
-        
+     */   
 
     }
     post{
