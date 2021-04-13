@@ -50,7 +50,7 @@ pipeline{
                 }
                 withSonarQubeEnv('sonarQube'){
                     echo 'Performing SonarQube Analysis'
-                    bat 'mvn -f app/pom.xml package sonar:sonar'
+                    sh 'mvn -f app/pom.xml package sonar:sonar'
                 }
             }
             post{
