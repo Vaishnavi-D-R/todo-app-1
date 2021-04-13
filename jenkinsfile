@@ -73,7 +73,7 @@ pipeline{
             
             }
         }
-stage('Docker build'){
+/*stage('Docker build'){
             steps{
                 sh 'docker image prune -a --force'
                     sh 'docker-compose build'
@@ -83,17 +83,13 @@ stage('Docker build'){
         }
         stage('Pushing images to docker hub'){
             steps{
-               
-               
-                   sh "docker login -u vaishu2000 -p Vaish$103"
-
-               
+                sh "docker login -u vaishu2000 -p Vaish$103"
                 sh "docker tag CI-pipeline_app:latest vaishu2000/todo-app:v${env.BUILD_ID}"
                 sh "docker push vaishu2000/todo-app:v${env.BUILD_ID}"
 
             }
         }
-        
+      */  
 
     }
     /*post{
