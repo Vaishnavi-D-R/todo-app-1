@@ -128,11 +128,11 @@ pipeline{
          }  
          success {   
             echo "========Deploying executed successfully========"
-            emailext attachLog: true, body: "<b>Example</b><br>Project: ${env.JOB_NAME}", from: 'vaishnavidr2000@gmail.com', mimeType: 'text/html', replyTo: '', subject: "Deploy Success CI: Project name -> ${env.JOB_NAME}", to: "vaishnavidr2000@gmail.com";
+            emailext attachLog: true, body: "<b>Example</b><br>Project: ${env.JOB_NAME}", from: 'vaishnavidr123@gmail.com', mimeType: 'text/html', replyTo: '', subject: "Deploy Success CI: Project name -> ${env.JOB_NAME}", to: "vaishnavidr123@gmail.com";
          }  
          failure {  
          echo " *build failed* "
-              mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>Stage Name: $last_staged <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: 'vaishnavidr2000@gmail.com', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "vaishnavidr2000@gmail.com";   
+              mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>Stage Name: $last_staged <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: 'vaishnavidr123@gmail.com', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "vaishnavidr123@gmail.com";   
          }  
          unstable {  
              echo 'This will run only if the run was marked as unstable'  
