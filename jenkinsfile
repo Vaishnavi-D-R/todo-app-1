@@ -83,7 +83,7 @@ stage('Docker build'){
         }
         stage('Pushing images to docker hub'){
             steps{
-            withCredentials([string(credentialsId: 'sonarQube', variable: 'dockerpwd')]) {
+            withCredentials([string(credentialsId: 'dockerpass', variable: 'dockerpwd')]) {
              sh "docker login -u vaishu2000 -p ${dockerpwd}"
                }
                
