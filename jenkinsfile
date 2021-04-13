@@ -2,13 +2,17 @@ pipeline{
     agent any;
      tools{
        maven 'maven'
-       jdk 'jdk15'
+       jdk 'jdk'
    }
     stages{
         stage("build"){
+        
             steps{
-                sh 'mvn clean'
-                sh 'mvn -f app/pom.xml compile'
+            script{
+                last_staged = env.STAGE_NAME
+                }
+                bat 'mvn clean'
+                bat 'mvn -f app/pom.xml compile'
             }
             post{
                 success{
@@ -22,8 +26,11 @@ pipeline{
     
      stage("Test"){
             steps{
+                script{
+                last_started=env.STAGE_NAME
+                  }
                 echo "Maven Test"
-                sh 'mvn -f app/pom.xml -Dmaven.test.failure.ignore=true  test'
+                bat 'mvn -f app/pom.xml -Dmaven.test.failure.ignore=true  test'
                 
             }
             post{
@@ -42,9 +49,12 @@ pipeline{
        stage('sonar analysis'){
             agent any
             steps{
+            script{
+                last_staged = env.STAGE_NAME
+                }
                 withSonarQubeEnv('sonarQube'){
                     echo 'Performing SonarQube Analysis'
-                    sh 'mvn -f app/pom.xml package sonar:sonar'
+                    bat 'mvn -f app/pom.xml package sonar:sonar'
                 }
             }
             post{
@@ -61,9 +71,12 @@ pipeline{
         
          stage("Quality Gate") {
             steps {
-              
+              script{
+                last_staged = env.STAGE_NAME
+                }
               timeout(time: 1, unit: 'HOURS') {
                 script{
+                
                         def qg = waitForQualityGate() 
                         if (qg.status != 'OK')
                         {
@@ -74,7 +87,7 @@ pipeline{
               }
              
             }
-        
+            
             post {  
             success {
                 echo ' SonarQube Analysis complete'
@@ -85,16 +98,19 @@ pipeline{
             }    
           }
         }  
-         
+        
         
     stage('deploy to artifactory'){
             steps{
+            script{
+                last_staged = env.STAGE_NAME
+                }
                 rtUpload (
             serverId: 'ARTIFACTORY_SERVER',
             spec: '''{
                  "files": [
                              {
-                                "pattern": "/var/jenkins_home/workspace/todo-app-complete-ci-cd@2/app/target/*.war",
+                                "pattern": "target/*.jar",
                                 "target": "art-doc-dev-loc-todo-app/"
                             }
                         ]
@@ -105,6 +121,9 @@ pipeline{
         
         stage('download artifact'){
             steps{
+            script{
+                last_staged = env.STAGE_NAME
+                }
                  rtDownload (
                  serverId: "ARTIFACTORY_SERVER",
                 spec:"""{
@@ -119,10 +138,36 @@ pipeline{
             
             }
         }
+stage('Docker build'){
+            steps{
+               script{
+                last_staged = env.STAGE_NAME
+                }
+                    sh 'docker image prune -a --force'
+                    sh 'docker-compose build'
+                
+               
+            }
+        }
+        stage('Pushing images to docker hub'){
+            steps{
+                script{
+                last_staged = env.STAGE_NAME
+                }
+               
+                withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPWD')]) {
+                            // some block
+                   sh "docker login -u vaishu2000 -p ${dockerHubPWD}"
 
-    
+                }
+                sh "docker commit cisample_app_1 vaishu/todo-app:v${env.BUILD_ID}"
+                sh "docker push vaishu/todo-app:v${env.BUILD_ID}"
 
-    } post{
+            }
+        }
+        
+
+    }post{
         always {  
              echo 'This will always run always'  
          }  
