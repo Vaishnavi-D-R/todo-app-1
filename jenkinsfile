@@ -1,5 +1,5 @@
 pipeline{
-    agent any;
+    agent any
      tools{
        maven 'maven'
        jdk 'jdk'
@@ -12,14 +12,7 @@ pipeline{
                 sh 'mvn clean'
                 sh 'mvn -f app/pom.xml compile'
             }
-            post{
-                success{
-                    echo "========Maven compile stage executed successfully========"
-                }
-                failure{
-                    echo "========Maven compile stage execution failed========"
-                }
-            }
+          
         }
     
      stage("Test"){
@@ -29,17 +22,7 @@ pipeline{
                 sh 'mvn -f app/pom.xml -Dmaven.test.failure.ignore=true  test'
                 
             }
-            post{
-                success{
-                    echo "========Maven Test stage executed successfully========"
-                     junit 'app/target/surefire-reports/*.xml'
-
-                }
-                failure{
-                    echo "========Maven Test stage execution failed========"
-                     junit 'app/target/surefire-reports/*.xml'
-                }
-            }
+          
         }
        
        stage('sonar analysis'){
@@ -51,15 +34,7 @@ pipeline{
                     sh 'mvn -f app/pom.xml package sonar:sonar'
                 }
             }
-            post{
-                success{
-                    echo "========Code Analysis stage executed successfully========"
-
-                }
-                failure{
-                    echo "========Code Analysis stage execution failed========"
-                }
-            }
+          
             
         }
         
@@ -121,7 +96,8 @@ stage('Docker build'){
         }
         
 
-    }post{
+    }
+    /*post{
         always {  
              echo 'This will always run always'  
          }  
@@ -140,6 +116,6 @@ stage('Docker build'){
              echo 'This will run only if the state of the Pipeline has changed'  
              echo 'For example, if the Pipeline was previously failing but is now successful'  
          }  
-    }
+    }*/
    
 }
