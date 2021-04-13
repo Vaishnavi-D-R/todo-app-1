@@ -45,9 +45,7 @@ pipeline{
        stage('sonar analysis'){
             agent any
             steps{
-            script{
-                last_staged = env.STAGE_NAME
-                }
+           
                 withSonarQubeEnv('sonarQube'){
                     echo 'Performing SonarQube Analysis'
                     sh 'mvn -f app/pom.xml package sonar:sonar'
@@ -65,42 +63,10 @@ pipeline{
             
         }
         
-         stage("Quality Gate") {
-            steps {
-              script{
-                last_staged = env.STAGE_NAME
-                }
-              timeout(time: 1, unit: 'HOURS') {
-                script{
-                
-                        def qg = waitForQualityGate() 
-                        if (qg.status != 'OK')
-                        {
-                            error "Pipeline failed due to gate failure "
-                            
-                         }
-                    }
-              }
-             
-            }
-            
-            post {  
-            success {
-                echo ' SonarQube Analysis complete'
-                }
-            failure {  
-             echo 'SonarQube Analysis Failed'
-             
-            }    
-          }
-        }  
-        
         
     stage('deploy to artifactory'){
             steps{
-            script{
-                last_staged = env.STAGE_NAME
-                }
+          
                 rtUpload (
             serverId: 'ARTIFACTORY_SERVER',
             spec: '''{
@@ -117,9 +83,7 @@ pipeline{
         
         stage('download artifact'){
             steps{
-            script{
-                last_staged = env.STAGE_NAME
-                }
+           
                  rtDownload (
                  serverId: "ARTIFACTORY_SERVER",
                 spec:"""{
@@ -136,10 +100,7 @@ pipeline{
         }
 stage('Docker build'){
             steps{
-               script{
-                last_staged = env.STAGE_NAME
-                }
-                    sh 'docker image prune -a --force'
+                sh 'docker image prune -a --force'
                     sh 'docker-compose build'
                 
                
@@ -147,9 +108,6 @@ stage('Docker build'){
         }
         stage('Pushing images to docker hub'){
             steps{
-                script{
-                last_staged = env.STAGE_NAME
-                }
                
                 withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPWD')]) {
                             // some block
