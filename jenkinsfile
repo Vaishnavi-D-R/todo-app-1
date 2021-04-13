@@ -84,7 +84,7 @@ stage('Docker build'){
         stage('Pushing images to docker hub'){
             steps{
                 sh "docker login -u vaishu2000 -p vaishu2000"
-                sh "docker tag ci_pipeline_app:latest vaishu2000/todo-app:v${env.BUILD_ID}"
+                sh "docker tag practice_app:latest vaishu2000/todo-app:v${env.BUILD_ID}"
                 sh "docker push vaishu2000/todo-app:v${env.BUILD_ID}"
 
             }
