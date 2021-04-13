@@ -8,11 +8,9 @@ pipeline{
         stage("build"){
         
             steps{
-            script{
-                last_staged = env.STAGE_NAME
-                }
-                bat 'mvn clean'
-                bat 'mvn -f app/pom.xml compile'
+           
+                sh 'mvn clean'
+                sh 'mvn -f app/pom.xml compile'
             }
             post{
                 success{
@@ -26,11 +24,9 @@ pipeline{
     
      stage("Test"){
             steps{
-                script{
-                last_started=env.STAGE_NAME
-                  }
+               
                 echo "Maven Test"
-                bat 'mvn -f app/pom.xml -Dmaven.test.failure.ignore=true  test'
+                sh 'mvn -f app/pom.xml -Dmaven.test.failure.ignore=true  test'
                 
             }
             post{
