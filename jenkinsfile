@@ -5,7 +5,7 @@ pipeline{
        jdk 'jdk15'
    }
     stages{
-        stage("build"){
+        /*stage("build"){
         
             steps{
            
@@ -91,7 +91,7 @@ stage('Docker build'){
                 sh "docker push vaishu2000/todo-app:latest"
 
             }
-        }
+        }*/
          stage('deploying it to kubernetes'){
             steps{
             //    sh 'chmod +x change-tag.sh'
